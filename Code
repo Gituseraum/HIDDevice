@@ -1,0 +1,115 @@
+/*
+  Blue Pill USB HID Joystick
+  - 2 analog axes (X, Y) using potentiometers
+  - 4 buttons (digital inputs)
+  - Uses USBComposite HID joystick
+
+  Make sure you have:
+  - STM32 Arduino core installed
+  - USBComposite library available
+  - Board set to "Generic STM32F103C8" (or similar)
+  - Upload method set to HID bootloader (if you use that)
+*/
+
+#include <USBComposite.h>
+
+// ---------------------- Pin configuration ----------------------
+
+// Analog inputs for joystick axes (change if needed)
+#define PIN_X_AXIS   PA0   // Potentiometer for X axis
+#define PIN_Y_AXIS   PA1   // Potentiometer for Y axis
+
+// Digital inputs for buttons (wired to GND, using internal pull-ups)
+#define PIN_BTN_1    PB0
+#define PIN_BTN_2    PB1
+#define PIN_BTN_3    PB10
+#define PIN_BTN_4    PB11
+
+// ---------------------- USB HID joystick object ----------------
+
+USBHID HID;
+HIDJoystick joystick(HID);
+
+// ---------------------- Helper: map 12-bit ADC to 8-bit axis ----
+// STM32 ADC is typically 12-bit: 0–4095
+// HID joystick axis is usually 8-bit: 0–255
+
+uint8_t adcToAxis8(int adcValue) {
+  // Constrain just in case
+  if (adcValue < 0) adcValue = 0;
+  if (adcValue > 4095) adcValue = 4095;
+
+  // Map 0–4095 to 0–255
+  return (uint8_t)((adcValue * 255L) / 4095L);
+}
+
+// ---------------------- Setup ----------------------------------
+
+void setup() {
+  // Configure analog pins (no pinMode needed for analogRead in Arduino,
+  // but we can leave this comment to show intent)
+  // pinMode(PIN_X_AXIS, INPUT_ANALOG);
+  // pinMode(PIN_Y_AXIS, INPUT_ANALOG);
+
+  // Configure button pins as inputs with internal pull-ups
+  pinMode(PIN_BTN_1, INPUT_PULLUP);
+  pinMode(PIN_BTN_2, INPUT_PULLUP);
+  pinMode(PIN_BTN_3, INPUT_PULLUP);
+  pinMode(PIN_BTN_4, INPUT_PULLUP);
+
+  // Prepare USB HID
+  USBComposite.clear();          // Clear any previous USB configuration
+  joystick.setManualReport(true); // We will manually send reports
+  HID.begin(HID_JOYSTICK);        // Start HID as joystick
+  USBComposite.begin();           // Start USB
+
+  // Optional: small delay to let host enumerate
+  delay(1000);
+}
+
+// ---------------------- Main loop ------------------------------
+
+void loop() {
+  // -------- Read analog axes --------
+  int rawX = analogRead(PIN_X_AXIS);  // 0–4095
+  int rawY = analogRead(PIN_Y_AXIS);  // 0–4095
+
+  // Convert to 0–255 for HID
+  uint8_t xAxis = adcToAxis8(rawX);
+  uint8_t yAxis = adcToAxis8(rawY);
+
+  // -------- Read buttons (active LOW) --------
+  // We’ll pack them into a bitmask:
+  // bit 0 = button 1
+  // bit 1 = button 2
+  // bit 2 = button 3
+  // bit 3 = button 4
+
+  uint16_t buttonsMask = 0;
+
+  if (digitalRead(PIN_BTN_1) == LOW) {
+    buttonsMask |= (1 << 0);
+  }
+  if (digitalRead(PIN_BTN_2) == LOW) {
+    buttonsMask |= (1 << 1);
+  }
+  if (digitalRead(PIN_BTN_3) == LOW) {
+    buttonsMask |= (1 << 2);
+  }
+  if (digitalRead(PIN_BTN_4) == LOW) {
+    buttonsMask |= (1 << 3);
+  }
+
+  // -------- Send HID joystick report --------
+  // Many HID joystick implementations support:
+  //   setAxes(x, y, z, rx, ry, rz)
+  //   setButtons(mask)
+  // We only use X and Y; others set to center (127) or 0.
+
+  joystick.setAxes(xAxis, yAxis, 127, 127, 127, 127); // X, Y, Z, Rx, Ry, Rz
+  joystick.setButtons(buttonsMask);                   // 16-bit button mask
+  joystick.send();                                    // Send report to host
+
+  // Small delay to avoid spamming USB too fast
+  delay(10);
+}
