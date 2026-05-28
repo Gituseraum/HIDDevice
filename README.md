@@ -1,10 +1,5 @@
-#!/usr/bin/env python3
-# This script prints the full README.md content.
-# You can run it to regenerate README.md automatically.
-
-readme = r"""
-# 🛩️ Blue Pill USB HID Joystick  
-### 2‑Axis + 4‑Button Flight Simulator Controller
+# <div align="center">🛩️ Blue Pill USB HID Joystick</div>
+### <div align="center">2‑Axis + 4‑Button Flight Simulator Controller</div>
 
 This project turns an **STM32 Blue Pill (STM32F103C8)** into a **USB HID joystick** using the Arduino STM32 core and USBComposite HID library.
 
@@ -35,6 +30,35 @@ It provides:
 - 4× momentary push buttons  
 - USB Mini‑B cable  
 - Jumper wires  
+- **Springs** (for joystick centering)  
+- **Universal joint** (for X/Y gimbal movement)  
+- **10 mm steel/aluminum rod** (joystick shaft)  
+
+---
+
+## 🔧 How I Made My Fusion Models
+
+I designed the joystick mechanism in **Autodesk Fusion 360** using these steps:
+
+1. **Created the base plate**  
+   - Simple rectangular sketch  
+   - Added mounting holes for the Blue Pill and potentiometers  
+
+2. **Designed the gimbal system**  
+   - Used a **universal joint** model to allow smooth X/Y rotation  
+   - Added mounting brackets for the potentiometer arms  
+
+3. **Added the joystick shaft**  
+   - Modeled a **10 mm rod**  
+   - Added a top grip and screw hole  
+
+4. **Added centering springs**  
+   - Two springs placed at 90°  
+   - Anchored to the frame and joystick arm  
+
+5. **Exported STL files**  
+   - Printed on a standard FDM printer  
+   - Used M3 screws for assembly  
 
 ---
 
@@ -58,6 +82,28 @@ Outer legs → **3.3V** and **GND**
 
 ---
 
+## 🔌 Wiring (ASCII Diagram)
+
+
+      +3.3V ---- Pot X ---- GND
+                    |
+                   PA0
+
+      +3.3V ---- Pot Y ---- GND
+                    |
+                   PA1
+
+
+   PB0 ---- Button 1 ---- GND
+   PB1 ---- Button 2 ---- GND
+   PB10 --- Button 3 ---- GND
+   PB11 --- Button 4 ---- GND
+
+
+---
+
+---
+
 ## 🛠️ Software Setup
 
 1. Install **Arduino IDE**  
@@ -70,3 +116,17 @@ Outer legs → **3.3V** and **GND**
 6. Upload using HID bootloader or ST‑Link  
 
 ---
+
+## 📜 License (MIT)
+
+Copyright (c) 2025
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+
