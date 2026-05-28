@@ -13,6 +13,32 @@ It provides:
 
 ---
 
+## <div align="center">🖼️ Fusion 360 Renders</div>
+
+Upload your renders into the repo and replace the filenames:
+
+![Fusion Render 1](images/fusion_render_1.png)
+![Fusion Render 2](images/fusion_render_2.png)
+
+---
+
+## <div align="center">📸 Joystick Photos</div>
+
+Add real photos of your build:
+
+![Joystick Photo 1](images/joystick_photo_1.jpg)
+![Joystick Photo 2](images/joystick_photo_2.jpg)
+
+---
+
+## <div align="center">📐 Wiring Diagram (Image)</div>
+
+Add your wiring diagram image here:
+
+![Wiring Diagram](images/wiring_diagram.png)
+
+---
+
 ## ✨ Features
 
 - USB HID Joystick (no drivers required)  
@@ -31,34 +57,20 @@ It provides:
 - USB Mini‑B cable  
 - Jumper wires  
 - **Springs** (for joystick centering)  
-- **Universal joint** (for X/Y gimbal movement)  
-- **10 mm steel/aluminum rod** (joystick shaft)  
+- **Universal joint** (for X/Y gimbal)  
+- **10 mm rod** (joystick shaft)  
 
 ---
 
 ## 🔧 How I Made My Fusion Models
 
-I designed the joystick mechanism in **Autodesk Fusion 360** using these steps:
+I designed the joystick mechanism in **Fusion 360**:
 
-1. **Created the base plate**  
-   - Simple rectangular sketch  
-   - Added mounting holes for the Blue Pill and potentiometers  
-
-2. **Designed the gimbal system**  
-   - Used a **universal joint** model to allow smooth X/Y rotation  
-   - Added mounting brackets for the potentiometer arms  
-
-3. **Added the joystick shaft**  
-   - Modeled a **10 mm rod**  
-   - Added a top grip and screw hole  
-
-4. **Added centering springs**  
-   - Two springs placed at 90°  
-   - Anchored to the frame and joystick arm  
-
-5. **Exported STL files**  
-   - Printed on a standard FDM printer  
-   - Used M3 screws for assembly  
+1. Created the base plate with mounting holes  
+2. Designed the gimbal using a **universal joint**  
+3. Modeled the **10 mm joystick rod**  
+4. Added **centering springs** at 90°  
+5. Exported STLs and 3D‑printed the parts  
 
 ---
 
@@ -83,6 +95,8 @@ Outer legs → **3.3V** and **GND**
 ---
 
 ## 🔌 Wiring (ASCII Diagram)
+
+
 
 
       +3.3V ---- Pot X ---- GND
